@@ -3,20 +3,23 @@ import ApiService from "@/core/services/ApiService";
 import JwtService from "@/core/services/JwtService";
 import type IUser from "@/core/models/user";
 
+import { AUTH, USER } from "@/core/mocks";
+import type IResponse from "@/core/models/response";
+
 export interface IAuth {
   user: IUser;
   jwt: string;
 }
 export interface IState {
-  errors: Object;
+  response: IResponse;
   user: IUser;
   isAuthenticated: Boolean;
 }
 export const useAuthStore = defineStore({
   id: "authStore",
   state: (): IState => ({
-    errors: {},
-    user: {},
+    response: {} as IResponse,
+    user: {} as IUser,
     isAuthenticated: false,
   }),
   getters: {},
@@ -24,69 +27,60 @@ export const useAuthStore = defineStore({
     setAuth(authUser: IAuth) {
       this.isAuthenticated = true;
       this.user = authUser.user;
-      this.errors = {};
+      this.response = {
+        code: 0,
+        success: true,
+        message: "",
+        data: authUser,
+      };
       JwtService.saveToken(authUser.jwt);
     },
 
-    setError(error: any) {
-      this.errors = { ...error };
+    setError(error: IResponse) {
+      this.response = { ...error };
     },
 
     purgeAuth() {
       this.isAuthenticated = false;
       this.user = {} as IUser;
-      this.errors = {};
+      this.response = {} as IResponse;
       JwtService.destroyToken();
     },
 
-    login(credentials: { identifier: string; password: string }) {
-      return ApiService.post("/auth/local", credentials)
-        .then(({ data }) => {
-          this.setAuth(data);
-        })
-        .catch(({ response }) => {
-          this.setError(response.data.error);
-        });
+    login(credentials: { email: string; password: string }) {
+      return new Promise((resolve, reject) => {
+        if (JSON.stringify(credentials) === JSON.stringify(AUTH)) {
+          const auth: IAuth = {
+            user: USER,
+            jwt: "fasfhjkwerowyeiqfhsakh2$#@#fashfkjhw&(khfafs",
+          };
+          this.setAuth(auth);
+          resolve(this.response);
+          return;
+        } else {
+          reject();
+          return this.setError({
+            code: 404,
+            success: false,
+            message: "Login or Password is incorrect",
+            data: null,
+          });
+        }
+      });
     },
 
     logout() {
       this.purgeAuth();
     },
 
-    register(credentials: IUser) {
-      return ApiService.post("register", credentials)
-        .then(({ data }) => {
-          this.setAuth(data);
-        })
-        .catch(({ response }) => {
-          this.setError(response.data.errors);
-        });
-    },
-
-    forgotPassword(email: string) {
-      return ApiService.post("forgot_password", email)
-        .then(() => {
-          this.setError({});
-        })
-        .catch(({ response }) => {
-          this.setError(response.data.errors);
-        });
-    },
-
     verifyAuth() {
       if (JwtService.getToken()) {
-        // ApiService.setHeader();
-        // ApiService.post("verify_token", { api_token: JwtService.getToken() })
-        //   .then(({ data }) => {
-        //     setAuth(data);
-        //   })
-        //   .catch(({ response }) => {
-        //     setError(response.data.errors);
-        //     purgeAuth();
-        //   });
-      } else {
-        this.purgeAuth();
-      }
+        const auth: IAuth = {
+          user: USER,
+          jwt: "fasfhjkwerowyeiqfhsakh2$#@#fashfkjhw&(khfafs",
+        };
+        return this.setAuth(auth);
+      } else this.purgeAuth();
     },
   },
 });

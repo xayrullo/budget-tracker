@@ -3,7 +3,7 @@ import {
   createWebHistory,
   type RouteRecordRaw,
 } from "vue-router";
-// import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth";
 // import { useConfigStore } from "@/stores/config";
 
 const routes: Array<RouteRecordRaw> = [
@@ -24,6 +24,15 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Dashboards"],
         },
       },
+      {
+        path: "/transactions",
+        name: "transactions",
+        component: () => import("@/views/Transactions.vue"),
+        meta: {
+          pageTitle: "Transactions",
+          breadcrumbs: ["Transactions"],
+        },
+      },
     ],
   },
   {
@@ -38,24 +47,6 @@ const routes: Array<RouteRecordRaw> = [
           pageTitle: "Sign In",
         },
       },
-      //   {
-      //     path: "/sign-up",
-      //     name: "sign-up",
-      //     component: () =>
-      //       import("@/views/crafted/authentication/basic-flow/SignUp.vue"),
-      //     meta: {
-      //       pageTitle: "Sign Up",
-      //     },
-      //   },
-      //   {
-      //     path: "/password-reset",
-      //     name: "password-reset",
-      //     component: () =>
-      //       import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
-      //     meta: {
-      //       pageTitle: "Password reset",
-      //     },
-      //   },
     ],
   },
   //   {
@@ -109,29 +100,21 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  //   const authStore = useAuthStore();
-  //   const configStore = useConfigStore();
+  const authStore = useAuthStore();
 
-  // current page view title
-  //   document.title = `${to.meta.pageTitle} - ${import.meta.env.VITE_APP_NAME}`;
+  document.title = `${to.meta.pageTitle} - ${import.meta.env.VITE_APP_NAME}`;
 
-  // reset config to initial state
-  //   configStore.resetLayoutConfig();
+  authStore.verifyAuth();
 
-  // verify auth token before each page change
-  //   authStore.verifyAuth();
-  
-  // before page access check if page requires authentication
   if (to.meta.middleware == "auth") {
-      next({ name: "sign-in" });
-      // if (authStore.isAuthenticated) {
-      //   next();
-      // } else {
-      //   next({ name: "sign-in" });
-      // }
-    } else {
+    if (authStore.isAuthenticated) {
       next();
+    } else {
+      next({ name: "sign-in" });
     }
+  } else {
+    next();
+  }
 });
 
 export default router;
