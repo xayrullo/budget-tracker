@@ -5,6 +5,7 @@ export default interface ITransaction extends Omit<ITransactionPost, "amount"> {
 }
 
 export interface ITransactionPost {
+  _id?: string;
   amount: number | null;
   expenseDate: string;
   itemName: string;
