@@ -1,15 +1,18 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["env.d.ts", "src/**/*.vue"],
   "compilerOptions": {
-    "esModuleInterop": true,
-    "lib": ["es2017", "DOM"],
+    "lib": ["es2017"],
     "ignoreDeprecations": "5.0",
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
+    }
   },
-  "references": [{ "path": "./tsconfig.config.json" }]
+  // "references": [
+  //   {
+  //     "path": "./tsconfig.config.json"
+  //   }
+  // ]
 }

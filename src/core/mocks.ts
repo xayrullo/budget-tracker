@@ -1,5 +1,6 @@
 import type ICategory from "./models/category";
 import type ITransaction from "./models/transaction";
+import type IUser from "./models/user";
 
 const currentDate = new Date();
 
@@ -8,7 +9,7 @@ export const AUTH = {
   password: "12345678",
 };
 
-export const USER = {
+export const USER: IUser = {
   id: 1,
   email: "xayrullo.jaloldinov@gmail.com",
   fullName: "Xayrullo Jaloldinov",

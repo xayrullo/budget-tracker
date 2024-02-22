@@ -9,8 +9,7 @@
   </div>
 </template>
 
-<script setup>
-import { XMarkIcon } from "@heroicons/vue/20/solid";
+<script setup lang="ts">
 defineProps({
   modelValue: {
     type: Boolean,
@@ -26,11 +25,6 @@ defineProps({
   },
   onClose: Function,
 });
-
-const emit = defineEmits(["onClose"]);
-const handleClose = () => {
-  emit("onClose");
-};
 </script>
 
 <style lang="scss">

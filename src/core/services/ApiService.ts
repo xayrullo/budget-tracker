@@ -3,7 +3,7 @@ import type { AxiosResponse } from "axios";
 import axios from "axios";
 import VueAxios from "vue-axios";
 import JwtService from "@/core/services/JwtService";
-
+type Element = any;
 class ApiService {
   public static vueInstance: App;
 

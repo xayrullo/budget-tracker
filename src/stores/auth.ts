@@ -50,7 +50,7 @@ export const useAuthStore = defineStore({
     login(credentials: { email: string; password: string }) {
       return new Promise((resolve, reject) => {
         if (JSON.stringify(credentials) === JSON.stringify(AUTH)) {
-          const auth: IAuth = {
+          const auth = {
             user: USER,
             jwt: "fasfhjkwerowyeiqfhsakh2$#@#fashfkjhw&(khfafs",
           };
